@@ -43,7 +43,7 @@ Task - Create, Update, ReadTaskByUId, ReadAllTask
         .catch(function(error){console.log(error)});    
 });*/
 
-app.get('/tasklist', (req, res) => {
+app.get('/tasklists', (req, res) => {
     TaskList.find({})
         .then((lists) => {
             res.status(200).send(lists);            
@@ -54,9 +54,21 @@ app.get('/tasklist', (req, res) => {
         });
 });
 
-// Route or Endpoint for creating a TaskList
+//Endpoint to get one TaskList by taskId: http://localhost:3000/tasklists/62c365e3de38d1db2a0d32c3
+app.get(
+    '/tasklists/:tasklistId', (req,res) => {    
+        let tasklistId = req.params.tasklistId;
+        TaskList.find({ _id: tasklistId })
+            .then((taskList)=>{
+                res.status(200).send(taskList)
+            })
+            .catch((error)=>{console.log(error)});
+    }
+);
 
-app.post('/tasklist', (req, res) => {
+
+// Route or Endpoint for creating a TaskList
+app.post('/tasklists', (req, res) => {
     //console.log("Hello i am inside post method");
     console.log(req.body);
 
@@ -71,7 +83,22 @@ app.post('/tasklist', (req, res) => {
         });
 
 });
-
+//PUT is Full update of object
+app.put('/tasklists/:tasklistId', (req,res) =>{
+    TaskList.findOneAndUpdate({ _id: req.params.tasklistId}, {$set: req.body})
+        .then((taskList)=>{
+            res.status(200).send(taskList)
+        })
+        .catch((error)=>{console.log(error)});
+});
+// Patch is apartial update of one field of an object
+app.patch('/tasklists/:tasklistId', (req,res) =>{
+    TaskList.findOneAndUpdate({ _id: req.params.tasklistId}, {$set: req.body})
+        .then((taskList)=>{
+            res.status(200).send(taskList)
+        })
+        .catch((error)=>{console.log(error)});
+});
 
 /*app.listen(3000, function(){
     console.log("Server started on port 3000");
