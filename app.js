@@ -100,6 +100,15 @@ app.patch('/tasklists/:tasklistId', (req,res) =>{
         .catch((error)=>{console.log(error)});
 });
 
+//Delete a taskList by id
+app.delete('/tasklists/:tasklistId', (req,res) =>{
+    TaskList.findByIdAndDelete(req.params.tasklistId)
+        .then((taskList)=>{
+            res.status(201).send(taskList)
+        })
+        .catch((error)=>{console.log(error)});
+});
+
 /*app.listen(3000, function(){
     console.log("Server started on port 3000");
 });*/
