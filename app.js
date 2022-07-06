@@ -109,6 +109,61 @@ app.delete('/tasklists/:tasklistId', (req,res) =>{
         .catch((error)=>{console.log(error)});
 });
 
+/* CRUD Operation for Task, 1 task debe pertenecar a 1 tasklist*/
+//Get all tasks for 1 TaskList, http://localhost:3000/taskslist/:tasklistId/tasks
+app.get('/tasklists/:tasklistId/tasks', (req,res) =>{
+    Task.find({_tasklistId: req.params.tasklistId})
+        .then((tasks)=>{
+            res.status(200).send(tasks)
+        })
+        .catch((error)=>{console.log(error)});
+});
+
+//Create a task inside a particular task List
+app.post('/tasklists/:tasklistId/tasks', (req, res) => {
+    console.log(req.body);
+
+    let taskObj = { 'title': req.body.title, '_tasklistId': req.params.tasklistId};
+    Task(taskObj).save()
+        .then((task)=>{
+            res.status(201).send(task);
+        })
+        .catch((error)=>{
+            console.log(error);
+            res.status(500);
+        });
+
+});
+
+
+// http://localhost:3000/taskslist/:tasklistId
+// Get 1 task inside 1 Tasklist
+app.get('/tasklists/:tasklistId/tasks/:taskId', (req,res) =>{
+    Task.findOne({_tasklistId: req.params.tasklistId, _id: req.params.taskId })
+        .then((task)=>{
+            res.status(200).send(task)
+        })
+        .catch((error)=>{console.log(error)});
+});
+
+//Update 1 task beloging to 1 TaskList
+app.patch('/tasklists/:tasklistId/tasks/:taskId', (req,res) =>{
+    Task.findOneAndUpdate({ _tasklistId: req.params.tasklistId, _id: req.params.taskId}, { $set: req.body })
+        .then((task)=>{
+            res.status(200).send(task)
+        })
+        .catch((error)=>{console.log(error)});
+});
+
+//Delete 1 task beloging to 1 TaskList
+app.delete('/tasklists/:tasklistId/tasks/:taskId', (req,res) =>{
+    Task.findOneAndDelete({ _tasklistId: req.params.tasklistId, _id: req.params.taskId})
+        .then((task)=>{
+            res.status(200).send(task)
+        })
+        .catch((error)=>{console.log(error)});
+});
+
 /*app.listen(3000, function(){
     console.log("Server started on port 3000");
 });*/
